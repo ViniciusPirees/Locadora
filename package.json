@@ -1,6 +1,7 @@
 {
   "name": "locadora",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend NodeJS para Locadora",
   "main": "index.js",
   "scripts": {
@@ -16,6 +17,7 @@
   "author": "Vinicius Pires e Matheus Hideki",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "mssql": "^7.2.1"
   }
 }
