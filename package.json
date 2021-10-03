@@ -1,0 +1,21 @@
+{
+  "name": "locadora",
+  "version": "1.0.0",
+  "description": "Backend NodeJS para Locadora",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Stored",
+    "Procedure",
+    "Sql",
+    "Server",
+    "Node"
+  ],
+  "author": "Vinicius Pires e Matheus Hideki",
+  "license": "MIT",
+  "dependencies": {
+    "mssql": "^7.2.1"
+  }
+}
