@@ -29,8 +29,8 @@ FIL_DT_INCLUSAO SMALLDATETIME NULL CONSTRAINT LOC_DF_FIL_INCLUSAO DEFAULT GETDAT
 -
 -
 INSERT INTO LOC_FILME (FIL_ST_NOME, FIL_IN_ANO, FIL_ST_CATEGORIA, FIL_ST_DIRETOR, FIL_ST_DESCRICAO) VALUES
-('Candyman',2021,'Terror','Nia DaCosta','Um jovem artista cria uma exposiÁ„o sobre Candyman, uma criatura maligna que, segundo as lendas, pode ser invocada diante de um
-espelho. Aos poucos, o fascÌnio do rapaz pelo monstro o joga em uma trama de mistÈrios, sangue e morte.')
+('Candyman',2021,'Terror','Nia DaCosta','Um jovem artista cria uma exposi√ß√£o sobre Candyman, uma criatura maligna que, segundo as lendas, pode ser invocada diante de um
+espelho. Aos poucos, o fasc√≠nio do rapaz pelo monstro o joga em uma trama de mist√©rios, sangue e morte.')
 -
 -
 -
@@ -44,9 +44,9 @@ espelho. Aos poucos, o fascÌnio do rapaz pelo monstro o joga em uma trama de mis
 ALTER PROCEDURE SP_S_LOC_FILME 
 AS
 SELECT
-	FIL_IN_CODIGO AS 'CÛdigo',
+	FIL_IN_CODIGO AS 'C√≥digo',
 	TRIM(UPPER(FIL_ST_NOME)) AS 'Nome do Filme', FIL_IN_ANO AS 'Ano', TRIM(UPPER(FIL_ST_CATEGORIA)) AS 'Categoria',
-	FIL_ST_DIRETOR AS 'Diretor(a)', FIL_ST_DESCRICAO AS 'DescriÁ„o', FIL_DT_INCLUSAO AS 'Inclus„o'
+	FIL_ST_DIRETOR AS 'Diretor(a)', FIL_ST_DESCRICAO AS 'Descri√ß√£o', FIL_DT_INCLUSAO AS 'Inclus√£o'
 	FROM LOC_FILME
 	ORDER BY
 	FIL_IN_CODIGO
@@ -77,20 +77,20 @@ WHERE FIL_ST_NOME LIKE '%'+@FILTRONOME+'%'
 
 IF LEN(TRIM(@FILTRONOME)) < 1
 BEGIN
-   RAISERROR('O nome do filme deve possuir no mÌnimo 1 caracter!',15,1)
+   RAISERROR('O nome do filme deve possuir no m√≠nimo 1 caracter!',15,1)
    RETURN
 END
 
 IF @NR_NOMEFILME = 0
 BEGIN
-   RAISERROR('O Filme informado n„o existe!',15,1)
+   RAISERROR('O Filme informado n√£o existe!',15,1)
    RETURN
 END
 
 SELECT
- FIL_IN_CODIGO AS 'CÛdigo',
+ FIL_IN_CODIGO AS 'C√≥digo',
 	TRIM(UPPER(FIL_ST_NOME)) AS 'Nome do Filme', LTRIM(FIL_IN_ANO) AS 'Ano', TRIM(UPPER(FIL_ST_CATEGORIA)) AS 'Categoria',
-	TRIM(UPPER(FIL_ST_DIRETOR)) AS 'Diretor(a)', TRIM(FIL_ST_DESCRICAO) AS 'DescriÁ„o'
+	TRIM(UPPER(FIL_ST_DIRETOR)) AS 'Diretor(a)', TRIM(FIL_ST_DESCRICAO) AS 'Descri√ß√£o'
 	FROM 
 	LOC_FILME
 	WHERE
@@ -99,7 +99,7 @@ SELECT
 	FIL_ST_NOME
 GO
 
---SELECT * FROM LOC_FILME WHERE FIL_ST_CATEGORIA LIKE '%AÁ„o%'
+--SELECT * FROM LOC_FILME WHERE FIL_ST_CATEGORIA LIKE '%A√ß√£o%'
 
 EXEC SP_S_LOC_FILME_FILTRONOME ''
 --
@@ -113,8 +113,8 @@ EXEC SP_S_LOC_FILME_FILTRONOME ''
 --
 --INCLUIR FILME
 ALTER PROCEDURE SP_I_LOC_FILME
-@NOME VARCHAR(100), @ANO INT, @CATEGORIA VARCHAR(30), @DIRETOR VARCHAR(100), @DESCRICAO VARCHAR(1000), --PAR¬METRO DE ENTRADA
-@CODIGOGERADO INT=0 OUT --PAR¬METRO DE SAÕDA
+@NOME VARCHAR(100), @ANO INT, @CATEGORIA VARCHAR(30), @DIRETOR VARCHAR(100), @DESCRICAO VARCHAR(1000), --PAR√ÇMETRO DE ENTRADA
+@CODIGOGERADO INT=0 OUT --PAR√ÇMETRO DE SA√çDA
 AS
 SET NOCOUNT ON -- DESLIGA A MSG DE LINHAS AFETADAS
 
@@ -129,7 +129,7 @@ FROM LOC_FILME WHERE FIL_IN_ANO = @ANO
 
 IF @NR_NOME > 0 AND @NR_ANO > 0
   BEGIN
-	RAISERROR('Este filme j· existe!',15,1)
+	RAISERROR('Este filme j√° existe!',15,1)
 	RETURN
   END
 
@@ -141,16 +141,29 @@ END
 
 IF LEN(TRIM(@NOME)) < 1
 BEGIN
-   RAISERROR('O nome do filme deve possuir no mÌnimo 1 caracter!',15,1)
+   RAISERROR('O nome do filme deve possuir no m√≠nimo 1 caracter!',15,1)
    RETURN
 END
+
+IF LEN(TRIM(@CATEGORIA)) < 1
+BEGIN
+   RAISERROR('O nome da categoria deve possuir no m√≠nimo 1 caracter!',15,1)
+   RETURN
+END
+
+IF LEN(TRIM(@DIRETOR)) < 1
+BEGIN
+   RAISERROR('O nome do(a) Diretor(a) deve possuir no m√≠nimo 1 caracter!',15,1)
+   RETURN
+END
+
 INSERT INTO LOC_FILME(FIL_ST_NOME, FIL_IN_ANO, FIL_ST_CATEGORIA,FIL_ST_DIRETOR, FIL_ST_DESCRICAO) VALUES (@NOME, @ANO, @CATEGORIA, @DIRETOR, @DESCRICAO)
 SET @CODIGOGERADO = SCOPE_IDENTITY() /* RETORNA O VALOR DO IDENTITY ATUAL */
 RETURN @CODIGOGERADO
 GO
 --
 
-EXEC SP_I_LOC_FILME 'Piratas do Caribe: A MaldiÁ„o do PÈrola Negra', '2003', 'Aventura/AÁ„o', 'Gore Verbinski', 'O pirata Jack Sparrow tem seu navio saqueado e roubado pelo capit„o Barbossa e sua tripulaÁ„o. Com o navio de Sparrow, Barbossa invade a cidade de Port Royal, levando consigo Elizabeth Swann, filha do governador. Para recuperar sua embarcaÁ„o, Sparrow recebe a ajuda de Will Turner, um grande amigo de Elizabeth. Eles desbravam os mares em direÁ„o ‡ misteriosa Ilha da Morte, tentando impedir que os piratas-esqueleto derramem o sangue de Elizabeth para desfazer a maldiÁ„o que os assola.'
+EXEC SP_I_LOC_FILME 'Piratas do Caribe: A Maldi√ß√£o do P√©rola Negra', '2003', 'Aventura/A√ß√£o', 'Gore Verbinski', 'O pirata Jack Sparrow tem seu navio saqueado e roubado pelo capit√£o Barbossa e sua tripula√ß√£o. Com o navio de Sparrow, Barbossa invade a cidade de Port Royal, levando consigo Elizabeth Swann, filha do governador. Para recuperar sua embarca√ß√£o, Sparrow recebe a ajuda de Will Turner, um grande amigo de Elizabeth. Eles desbravam os mares em dire√ß√£o √† misteriosa Ilha da Morte, tentando impedir que os piratas-esqueleto derramem o sangue de Elizabeth para desfazer a maldi√ß√£o que os assola.'
 
 --
 --
@@ -175,13 +188,13 @@ WHERE FIL_IN_CODIGO = @COD
 
 IF @NR_CODFILME = 0
 BEGIN
-   RAISERROR('O cÛdigo informado n„o existe!',15,1)
+   RAISERROR('O c√≥digo informado n√£o existe!',15,1)
    RETURN
 END
 
 IF LEN(TRIM(@NOME)) < 1
 BEGIN
-   RAISERROR('O nome do filme deve possuir no mÌnimo 1 caracter!',15,1)
+   RAISERROR('O nome do filme deve possuir no m√≠nimo 1 caracter!',15,1)
    RETURN
 END
 
@@ -192,7 +205,7 @@ UPDATE LOC_FILME
 RETURN
 GO
 --
-EXEC SP_U_LOC_FILME '1008', 'Tubar„o'
+EXEC SP_U_LOC_FILME '1008', 'Tubar√£o'
 --
 --
 --
@@ -213,7 +226,7 @@ WHERE FIL_IN_CODIGO = @COD
 
 IF @CODFILME = 0
 BEGIN
-	RAISERROR('O cÛdigo do filme informado n„o existe!',15,1)
+	RAISERROR('O c√≥digo do filme informado n√£o existe!',15,1)
 	RETURN
 END
 
@@ -244,22 +257,22 @@ WHERE FIL_ST_CATEGORIA LIKE '%'+@FILTROCATEGORIA+'%'
 
 IF LEN(TRIM(@FILTROCATEGORIA)) < 1
 BEGIN
-   RAISERROR('O nome da categoria deve possuir no mÌnimo 1 caracter!',15,1)
+   RAISERROR('O nome da categoria deve possuir no m√≠nimo 1 caracter!',15,1)
    RETURN
 END
 
 IF @NR_CATFILME = 0
 BEGIN
-   RAISERROR('A categoria informada n„o existe!',15,1)
+   RAISERROR('A categoria informada n√£o existe!',15,1)
    RETURN
 END
 
 
 
 SELECT
- FIL_IN_CODIGO AS 'CÛdigo',
+ FIL_IN_CODIGO AS 'C√≥digo',
 	TRIM(UPPER(FIL_ST_NOME)) AS 'Nome do Filme', LTRIM(FIL_IN_ANO) AS 'Ano', TRIM(UPPER(FIL_ST_CATEGORIA)) AS 'Categoria',
-	TRIM(UPPER(FIL_ST_DIRETOR)) AS 'Diretor(a)', TRIM(FIL_ST_DESCRICAO) AS 'DescriÁ„o'
+	TRIM(UPPER(FIL_ST_DIRETOR)) AS 'Diretor(a)', TRIM(FIL_ST_DESCRICAO) AS 'Descri√ß√£o'
 	FROM 
 	LOC_FILME
 	WHERE
@@ -296,14 +309,14 @@ END
 
 IF @NR_ANO = 0
 BEGIN
-   RAISERROR('N„o existe filme do ano informado na Locadora!',15,1)
+   RAISERROR('N√£o existe filme do ano informado na Locadora!',15,1)
    RETURN
 END
 
 SELECT
- FIL_IN_CODIGO AS 'CÛdigo',
+ FIL_IN_CODIGO AS 'C√≥digo',
 	TRIM(UPPER(FIL_ST_NOME)) AS 'Nome do Filme', LTRIM(FIL_IN_ANO) AS 'Ano', TRIM(UPPER(FIL_ST_CATEGORIA)) AS 'Categoria',
-	TRIM(UPPER(FIL_ST_DIRETOR)) AS 'Diretor(a)', TRIM(FIL_ST_DESCRICAO) AS 'DescriÁ„o'
+	TRIM(UPPER(FIL_ST_DIRETOR)) AS 'Diretor(a)', TRIM(FIL_ST_DESCRICAO) AS 'Descri√ß√£o'
 	FROM 
 	LOC_FILME
 	WHERE
